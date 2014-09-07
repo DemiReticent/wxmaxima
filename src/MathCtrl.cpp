@@ -1443,6 +1443,26 @@ void MathCtrl::OnKeyDown(wxKeyEvent& event) {
       }
       break;
 
+    case WXK_TAB:
+      if (m_activeCell != NULL) {
+        int type = m_activeCell->GetType();
+        if (event.ShiftDown())
+          if ((type == MC_TYPE_SECTION) ||
+              (type == MC_TYPE_SUBSECTION)) {
+            m_activeCell->SetType(type + 1);
+            SetHCaret(m_activeCell->GetParent()); // also refreshes
+          } else
+            event.Skip();
+        else
+          if ((type == MC_TYPE_SECTION) ||
+              (type == MC_TYPE_TITLE)) {
+            m_activeCell->SetType(type - 1);
+            SetHCaret(m_activeCell->GetParent()); // also refreshes
+          } else
+            event.Skip();
+      }
+      break;
+
 #ifndef wxUSE_UNICODE
     case WXK_ESCAPE:
       if (m_activeCell == NULL) {
